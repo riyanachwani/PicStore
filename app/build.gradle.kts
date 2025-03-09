@@ -33,13 +33,36 @@ android {
 
 dependencies {
 
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")          // For making API calls
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")    // To convert JSON responses to data classes
-    implementation("com.github.bumptech.glide:glide:4.15.1")         // For loading images efficiently
-    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1") // For Glide annotations (if needed)
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib:2.1.10")
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.1.10")
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.10")
+
+    // AndroidX Libraries
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+    implementation("androidx.recyclerview:recyclerview:1.3.1")
+
+    // Retrofit for API calls
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+
+    // Glide for image loading
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+    // Room Database (for offline caching and favorites)
+    implementation("androidx.room:room-runtime:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+
+    // ViewModel and LiveData (for MVVM)
+    implementation ("androidx.lifecycle:lifecycle-viewmodel:2.8.7")
+    implementation ("androidx.lifecycle:lifecycle-livedata:2.8.7")
+
+    // Paging Library for efficient list loading
+    implementation("androidx.paging:paging-runtime:3.3.6")
+
+    // Testing Libraries
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")

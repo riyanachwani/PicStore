@@ -6,7 +6,11 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public interface PhotoApiService {
+public interface ApiService {
+
     @GET("/v2/list")
-    Call<List<Photo>> getPhotos(@Query("page") int page, @Query("limit") int limit);
+    Call<List<Photo>> getPhotos(
+            @Query("page") int page,
+            @Query("limit") int limit
+    );
 }
