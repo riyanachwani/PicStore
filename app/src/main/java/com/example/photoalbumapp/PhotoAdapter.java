@@ -5,16 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
+
 import java.util.List;
 
-public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
+public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder> {
 
-    private Context context;
-    private List<Photo> photoList;
+    private final Context context;
+    private final List<Photo> photoList;
 
     public PhotoAdapter(Context context, List<Photo> photoList) {
         this.context = context;
@@ -23,16 +25,30 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     @NonNull
     @Override
-    public PhotoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_photo, parent, false);
-        return new PhotoViewHolder(view);
+        return new MyViewHolder(view);
     }
 
+    // 🟢 Step 5: Bind data to ViewHolder
     @Override
-    public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Photo photo = photoList.get(position);
-        holder.authorTextView.setText(photo.getAuthor());
-        Glide.with(context).load(photo.getDownloadUrl()).into(holder.imageView);
+        String imageUrl = photo.getDownloadUrl();  // Fixed this line
+
+        // Load image using Glide
+        Glide.with(holder.itemView.getContext())
+                .load(imageUrl)
+                .placeholder(R.drawable.placeholder)  // Optional placeholder
+                .error(R.drawable.error)              // Optional error image
+                .into(holder.imageView);              // ImageView from ViewHolder
+
+        // Handle like button click if present
+        holder.imageView.setOnClickListener(v -> {
+            boolean isLiked = photo.toggleLike();  // Toggle like status
+            Toast.makeText(context, isLiked ? "Liked!" : "Unliked!", Toast.LENGTH_SHORT).show();
+            notifyItemChanged(position);  // Refresh item
+        });
     }
 
     @Override
@@ -40,14 +56,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         return photoList.size();
     }
 
-    public static class PhotoViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView authorTextView;
 
-        public PhotoViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.imageView);
-            authorTextView = itemView.findViewById(R.id.authorTextView);
+            imageView = itemView.findViewById(R.id.imageView);  // Make sure ID matches your layout
         }
     }
 }

@@ -1,27 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp"
-        android:scrollbars="vertical" />
-
+    <!-- Search Bar at the Top -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:layout_gravity="top">
+        android:layout_gravity="top"
+        android:background="@android:color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/searchEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search by author or ID" />
+            android:hint="Search by author or ID"
+            android:drawableStart="@drawable/search"
+            android:paddingStart="12dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- RecyclerView for Photos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="70dp"
+        android:clipToPadding="false"
+        android:scrollbars="vertical" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

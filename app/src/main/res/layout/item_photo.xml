@@ -1,23 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_margin="8dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="12dp"
+    android:backgroundTint="@android:color/white">
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="vertical">
+
+<!-- Photo with rounded corners -->
+<ImageView
+    android:id="@+id/imageView"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:scaleType="centerCrop"
+    android:background="@drawable/rounded_corners" />
+
+<!-- Only Like Button (Removed Bookmark Button) -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="end"
     android:padding="8dp">
 
+    <!-- Like Button (Unfilled Heart by Default) -->
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:contentDescription="TODO" />
-
-    <TextView
-        android:id="@+id/authorTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Author Name"
-        android:textColor="#000"
-        android:textSize="16sp"
-        android:paddingTop="4dp" />
+        android:id="@+id/likeButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/unliked"
+        android:layout_marginEnd="8dp" />  <!-- Added margin for spacing -->
 </LinearLayout>
+
+<!-- Author name -->
+<TextView
+    android:id="@+id/authorTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="#000"
+    android:textSize="16sp"
+    android:padding="8dp"
+    android:maxLines="1"
+    android:ellipsize="end" />
+</LinearLayout>
+    </androidx.cardview.widget.CardView>
