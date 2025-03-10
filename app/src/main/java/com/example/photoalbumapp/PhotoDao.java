@@ -23,10 +23,10 @@ public interface PhotoDao {
     List<Photo> getAllPhotos();
 
     // ✅ Fix: Correct type for photoId (String, not int)
-    @Query("SELECT * FROM photos WHERE photoId = :photoId LIMIT 1")
+    @Query("SELECT * FROM photos WHERE ApiId = :photoId LIMIT 1")
     Photo getPhotoById(String photoId);  // Use String if photoId is a string
 
-    @Query("DELETE FROM photos WHERE photoId = :photoId")
+    @Query("DELETE FROM photos WHERE ApiId = :photoId")
     void deletePhotoById(String photoId);  // ✅ Add this method to fix the error
 
     @Query("DELETE FROM photos")

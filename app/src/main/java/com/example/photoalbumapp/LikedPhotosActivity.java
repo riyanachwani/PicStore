@@ -4,6 +4,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -22,14 +24,26 @@ public class LikedPhotosActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         appDatabase = AppDatabase.getInstance(this);
+        photoAdapter = new PhotoAdapter(this, new ArrayList<>(), appDatabase);
+        recyclerView.setAdapter(photoAdapter);
 
-        // Load liked images from local storage
+        // ✅ Load liked images when the activity starts
+        loadLikedPhotos();
+    }
+
+    // ✅ Add this method inside `LikedPhotosActivity`
+    private void loadLikedPhotos() {
         Executors.newSingleThreadExecutor().execute(() -> {
             List<Photo> likedPhotos = appDatabase.photoDao().getFavoritePhotos();
             runOnUiThread(() -> {
-                photoAdapter = new PhotoAdapter(this, likedPhotos, appDatabase);
-                recyclerView.setAdapter(photoAdapter);
+                photoAdapter.updateList(likedPhotos); // ✅ Ensures UI updates when photos are removed
             });
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadLikedPhotos(); // ✅ Refresh the list every time the user returns to this activity
     }
 }

@@ -2,28 +2,30 @@ package com.example.photoalbumapp;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "photos")
 public class Photo {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    @Expose(serialize = false, deserialize = false)  // 🚀 Ensures Room's ID is ignored by Gson
+    private int localId;  // Local database ID (does not conflict with API)
 
-    @SerializedName("id")  // Maps JSON "id" to "photoId"
-    private String photoId;
+    @SerializedName("id")  // ✅ Correctly maps API JSON "id"
+    private String apiId;
 
-    @SerializedName("author")  // Maps JSON "author" to "author"
+    @SerializedName("author")
     private String author;
 
-    @SerializedName("download_url")  // Maps JSON "download_url" to "downloadUrl"
+    @SerializedName("download_url")
     private String downloadUrl;
 
-    private boolean isLiked = false;  // Added field to track like status
+    private boolean isLiked = false;
 
     // Constructor
-    public Photo(String photoId, String author, String downloadUrl) {
-        this.photoId = photoId;
+    public Photo(String apiId, String author, String downloadUrl) {
+        this.apiId = apiId;
         this.author = author;
         this.downloadUrl = downloadUrl;
     }
@@ -35,13 +37,13 @@ public class Photo {
     }
 
     // Getters
-    public int getId() { return id; }
-    public String getPhotoId() { return photoId; }
+    public int getLocalId() { return localId; }  // No longer mapped to JSON
+    public String getApiId() { return apiId; }  // API ID correctly mapped
     public String getAuthor() { return author; }
     public String getDownloadUrl() { return downloadUrl; }
     public boolean isLiked() { return isLiked; }
 
     // Setters
-    public void setId(int id) { this.id = id; }
+    public void setLocalId(int localId) { this.localId = localId; }
     public void setLiked(boolean liked) { isLiked = liked; }
 }

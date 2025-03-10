@@ -40,47 +40,52 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Photo photo = photoList.get(position);
 
-        // Debugging - Check if the image URL is null or empty
+        // 🔍 Debugging - Check if the image URL is null or empty
         Log.d("PhotoAdapter", "Loading Image URL: " + photo.getDownloadUrl());
 
-        // Use a default placeholder if `downloadUrl` is null or empty
+        // 🖼️ Use a default placeholder if `downloadUrl` is null or empty
         String imageUrl = (photo.getDownloadUrl() != null && !photo.getDownloadUrl().isEmpty())
                 ? photo.getDownloadUrl()
                 : "https://via.placeholder.com/300"; // Default placeholder image
 
-        // Load image using Glide with proper error handling
+        // 🚀 Load image using Glide with error handling
         Glide.with(holder.itemView.getContext())
                 .load(imageUrl)
-                .placeholder(R.drawable.placeholder)  // Ensure this drawable exists
-                .error(R.drawable.error)              // Ensure this drawable exists
+                .placeholder(R.drawable.placeholder)  // ✅ Ensure this drawable exists in `res/drawable/`
+                .error(R.drawable.error)              // ✅ Ensure this drawable exists in `res/drawable/`
                 .into(holder.imageView);
 
-        // Set author name
+        // 📝 Set author name
         holder.authorTextView.setText(photo.getAuthor());
 
-        // Set like button icon
+        // ❤️ Set like button icon
         holder.likeButton.setImageResource(photo.isLiked() ? R.drawable.liked : R.drawable.unliked);
 
-        // Like button click listener
+        // 👍 Like button click listener
         holder.likeButton.setOnClickListener(v -> {
-            boolean isLiked = photo.toggleLike();
+            boolean isLiked = photo.toggleLike(); // Toggle like status
             holder.likeButton.setImageResource(isLiked ? R.drawable.liked : R.drawable.unliked);
 
-            // Show toast message
+            // 🔔 Show toast message
             Toast.makeText(context, isLiked ? "Saved to Favorites" : "Removed from Favorites", Toast.LENGTH_SHORT).show();
 
-            // Save or remove from local storage using background thread
+            // 🗄️ Save or remove from local storage in a background thread
             executorService.execute(() -> {
                 if (isLiked) {
-                    appDatabase.photoDao().insert(photo); // Save liked photo
+                    appDatabase.photoDao().insert(photo); // ✅ Save liked photo
                 } else {
-                    appDatabase.photoDao().deletePhotoById(photo.getPhotoId()); // Remove if unliked
+                    appDatabase.photoDao().deletePhotoById(photo.getApiId()); // ✅ Remove from local storage
                 }
-            });
 
-            notifyItemChanged(position);
+                // ✅ Ensure UI updates on MainActivity
+                ((MainActivity) context).runOnUiThread(() -> {
+                    notifyItemChanged(holder.getBindingAdapterPosition()); // ✅ Update UI (removes red heart)
+                });
+            });
         });
+
     }
+
 
     @Override
     public int getItemCount() {
