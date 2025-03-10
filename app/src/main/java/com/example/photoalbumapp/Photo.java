@@ -2,6 +2,7 @@ package com.example.photoalbumapp;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "photos")
 public class Photo {
@@ -9,10 +10,16 @@ public class Photo {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    private String photoId;         // Unique ID from API
+    @SerializedName("id")  // Maps JSON "id" to "photoId"
+    private String photoId;
+
+    @SerializedName("author")  // Maps JSON "author" to "author"
     private String author;
+
+    @SerializedName("download_url")  // Maps JSON "download_url" to "downloadUrl"
     private String downloadUrl;
-    private boolean isLiked = false;  // Track like status
+
+    private boolean isLiked = false;  // Added field to track like status
 
     // Constructor
     public Photo(String photoId, String author, String downloadUrl) {

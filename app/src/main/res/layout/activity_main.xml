@@ -1,16 +1,19 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
     <!-- Search Bar at the Top -->
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:layout_gravity="top"
-        android:background="@android:color/white">
+        app:boxBackgroundMode="filled"
+        app:boxBackgroundColor="@android:color/white"
+        app:boxStrokeColor="@android:color/darker_gray">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/searchEditText"
@@ -18,7 +21,7 @@
             android:layout_height="wrap_content"
             android:hint="Search by author or ID"
             android:drawableStart="@drawable/search"
-            android:paddingStart="12dp" />
+            android:paddingStart="12dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- RecyclerView for Photos -->
@@ -26,7 +29,18 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="70dp"
+        android:layout_marginTop="16dp"
+        android:paddingTop="8dp"
         android:clipToPadding="false"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"/>
+
+    <!-- Floating Action Button for Local Storage -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabLocalStorage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/localstorage"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

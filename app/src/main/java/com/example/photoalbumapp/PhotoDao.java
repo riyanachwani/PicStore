@@ -26,6 +26,9 @@ public interface PhotoDao {
     @Query("SELECT * FROM photos WHERE photoId = :photoId LIMIT 1")
     Photo getPhotoById(String photoId);  // Use String if photoId is a string
 
+    @Query("DELETE FROM photos WHERE photoId = :photoId")
+    void deletePhotoById(String photoId);  // ✅ Add this method to fix the error
+
     @Query("DELETE FROM photos")
     void deleteAllPhotos();
 }
