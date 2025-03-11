@@ -1,7 +1,6 @@
 package com.example.photoalbumapp;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,11 +20,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
     private List<Photo> photoList;
     private final AppDatabase appDatabase;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final boolean isLocalStorage; // ✅ Flag to check if it's Local Storage
 
-    public PhotoAdapter(Context context, List<Photo> photoList, AppDatabase appDatabase) {
+    public PhotoAdapter(Context context, List<Photo> photoList, AppDatabase appDatabase, boolean isLocalStorage) {
         this.context = context;
         this.photoList = photoList;
         this.appDatabase = appDatabase;
+        this.isLocalStorage = isLocalStorage;
     }
 
     @NonNull
@@ -40,62 +40,54 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Photo photo = photoList.get(position);
 
-        // 🔍 Debugging - Check if the image URL is null or empty
-        Log.d("PhotoAdapter", "Loading Image URL: " + photo.getDownloadUrl());
-
-        // 🖼️ Use a default placeholder if `downloadUrl` is null or empty
-        String imageUrl = (photo.getDownloadUrl() != null && !photo.getDownloadUrl().isEmpty())
-                ? photo.getDownloadUrl()
-                : "https://via.placeholder.com/300"; // Default placeholder image
-
-        // 🚀 Load image using Glide with error handling
         Glide.with(holder.itemView.getContext())
-                .load(imageUrl)
-                .placeholder(R.drawable.placeholder)  // ✅ Ensure this drawable exists in `res/drawable/`
-                .error(R.drawable.error)              // ✅ Ensure this drawable exists in `res/drawable/`
+                .load(photo.getDownloadUrl())
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.error)
                 .into(holder.imageView);
 
-        // 📝 Set author name
         holder.authorTextView.setText(photo.getAuthor());
 
-        // ❤️ Set like button icon
+        // Set like button icon
         holder.likeButton.setImageResource(photo.isLiked() ? R.drawable.liked : R.drawable.unliked);
 
-        // 👍 Like button click listener
+        // Like button click listener
         holder.likeButton.setOnClickListener(v -> {
-            boolean isLiked = photo.toggleLike(); // Toggle like status
+            boolean isLiked = photo.toggleLike();
             holder.likeButton.setImageResource(isLiked ? R.drawable.liked : R.drawable.unliked);
 
-            // 🔔 Show toast message
+            // Show toast message
             Toast.makeText(context, isLiked ? "Saved to Favorites" : "Removed from Favorites", Toast.LENGTH_SHORT).show();
 
-            // 🗄️ Save or remove from local storage in a background thread
             executorService.execute(() -> {
                 if (isLiked) {
-                    appDatabase.photoDao().insert(photo); // ✅ Save liked photo
+                    appDatabase.photoDao().insert(photo);
                 } else {
-                    appDatabase.photoDao().deletePhotoById(photo.getApiId()); // ✅ Remove from local storage
+                    appDatabase.photoDao().deletePhotoById(photo.getApiId());
+
+                    // ✅ Remove from UI instantly in LikedPhotosActivity
+                    if (isLocalStorage && context instanceof LikedPhotosActivity) {
+                        ((LikedPhotosActivity) context).runOnUiThread(() -> {
+                            ((LikedPhotosActivity) context).removePhotoFromList(photo);
+                        });
+                    }
                 }
-
-                // ✅ Ensure UI updates on MainActivity
-                ((MainActivity) context).runOnUiThread(() -> {
-                    notifyItemChanged(holder.getBindingAdapterPosition()); // ✅ Update UI (removes red heart)
-                });
             });
+
+            notifyItemChanged(position);
         });
-
     }
-
 
     @Override
     public int getItemCount() {
         return photoList.size();
     }
 
-    // Method to update list when filtering
+    // ✅ Fix: Add updateList() method to update UI properly
     public void updateList(List<Photo> newList) {
-        this.photoList = new ArrayList<>(newList);
-        notifyDataSetChanged();
+        this.photoList.clear();
+        this.photoList.addAll(newList);
+        notifyDataSetChanged(); // ✅ Ensure UI refreshes
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

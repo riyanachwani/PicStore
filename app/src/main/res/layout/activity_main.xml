@@ -45,6 +45,42 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <!-- Progress Bar for Initial Loading -->
+    <ProgressBar
+        android:id="@+id/progressBarMain"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <!-- Error Message & Retry Button -->
+    <LinearLayout
+        android:id="@+id/errorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/errorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Failed to load images."
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:padding="10dp"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/retryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Retry"
+            android:padding="10dp"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+
     <!-- RecyclerView for Photos -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -54,6 +90,15 @@
         android:paddingTop="8dp"
         android:clipToPadding="false"
         android:scrollbars="vertical"/>
+
+    <!-- Progress Bar for Pagination (Loading More) -->
+    <ProgressBar
+        android:id="@+id/progressBarBottom"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"/>
 
     <!-- Floating Action Button for Local Storage -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
